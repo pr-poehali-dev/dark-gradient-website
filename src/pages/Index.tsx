@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const apps = [
   {
@@ -103,8 +105,18 @@ const apps = [
 ];
 
 const Index = () => {
-  const governmentApps = apps.filter(app => app.category === "government");
-  const independentApps = apps.filter(app => app.category === "independent");
+  const [sortByRating, setSortByRating] = useState(false);
+  
+  const sortApps = (appsList: typeof apps) => {
+    if (sortByRating) {
+      return [...appsList].sort((a, b) => b.rating - a.rating);
+    }
+    return appsList;
+  };
+  
+  const governmentApps = sortApps(apps.filter(app => app.category === "government"));
+  const independentApps = sortApps(apps.filter(app => app.category === "independent"));
+  const allApps = sortApps(apps);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -165,18 +177,27 @@ const Index = () => {
 
         <section id="apps" className="container mx-auto px-4 py-20">
           <Tabs defaultValue="all" className="w-full">
-            <div className="flex justify-center mb-12">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
               <TabsList className="glass-effect">
                 <TabsTrigger value="all">Все приложения</TabsTrigger>
                 <TabsTrigger value="independent">Независимые</TabsTrigger>
                 <TabsTrigger value="government">Государственные</TabsTrigger>
               </TabsList>
+              
+              <Button
+                onClick={() => setSortByRating(!sortByRating)}
+                variant={sortByRating ? "secondary" : "outline"}
+                className="glass-effect"
+              >
+                <Icon name={sortByRating ? "ArrowDownWideNarrow" : "ArrowUpDown"} size={16} className="mr-2" />
+                {sortByRating ? "По рейтингу" : "Сортировка"}
+              </Button>
             </div>
 
             <TabsContent value="all">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {apps.map((app) => (
-                  <Card key={app.id} className="glass-effect hover:scale-105 transition-all duration-300 border-border/50">
+                {allApps.map((app) => (
+                  <Card key={app.id} className="bg-[#1A0B2E]/90 backdrop-blur-md hover:scale-105 transition-all duration-300 border-white/10 hover:border-white/20">
                     <CardHeader>
                       <div className="flex items-start justify-between mb-3">
                         <div className="text-5xl">{app.icon}</div>
@@ -194,22 +215,22 @@ const Index = () => {
                           )}
                         </div>
                       </div>
-                      <CardTitle className="text-2xl">{app.name}</CardTitle>
-                      <CardDescription className="text-base">{app.description}</CardDescription>
+                      <CardTitle className="text-2xl text-white">{app.name}</CardTitle>
+                      <CardDescription className="text-base text-white/80">{app.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">{app.details}</p>
+                      <p className="text-sm text-white/70 mb-4">{app.details}</p>
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-1">
                           <Icon name="Star" size={16} className="text-yellow-400 fill-yellow-400" />
-                          <span className="font-medium">{app.rating}</span>
+                          <span className="font-medium text-white">{app.rating}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-muted-foreground">
+                        <div className="flex items-center gap-1 text-white/60">
                           <Icon name="Download" size={16} />
                           <span>{app.downloads}</span>
                         </div>
                       </div>
-                      <Badge variant="outline" className="mt-4 w-full justify-center py-2">
+                      <Badge variant="outline" className="mt-4 w-full justify-center py-2 border-white/20 text-white/80">
                         {app.type}
                       </Badge>
                     </CardContent>
@@ -221,7 +242,7 @@ const Index = () => {
             <TabsContent value="independent">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {independentApps.map((app) => (
-                  <Card key={app.id} className="glass-effect hover:scale-105 transition-all duration-300 border-border/50">
+                  <Card key={app.id} className="bg-[#1A0B2E]/90 backdrop-blur-md hover:scale-105 transition-all duration-300 border-white/10 hover:border-white/20">
                     <CardHeader>
                       <div className="flex items-start justify-between mb-3">
                         <div className="text-5xl">{app.icon}</div>
@@ -231,22 +252,22 @@ const Index = () => {
                           </Badge>
                         )}
                       </div>
-                      <CardTitle className="text-2xl">{app.name}</CardTitle>
-                      <CardDescription className="text-base">{app.description}</CardDescription>
+                      <CardTitle className="text-2xl text-white">{app.name}</CardTitle>
+                      <CardDescription className="text-base text-white/80">{app.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">{app.details}</p>
+                      <p className="text-sm text-white/70 mb-4">{app.details}</p>
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-1">
                           <Icon name="Star" size={16} className="text-yellow-400 fill-yellow-400" />
-                          <span className="font-medium">{app.rating}</span>
+                          <span className="font-medium text-white">{app.rating}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-muted-foreground">
+                        <div className="flex items-center gap-1 text-white/60">
                           <Icon name="Download" size={16} />
                           <span>{app.downloads}</span>
                         </div>
                       </div>
-                      <Badge variant="outline" className="mt-4 w-full justify-center py-2">
+                      <Badge variant="outline" className="mt-4 w-full justify-center py-2 border-white/20 text-white/80">
                         {app.type}
                       </Badge>
                     </CardContent>
@@ -258,7 +279,7 @@ const Index = () => {
             <TabsContent value="government">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {governmentApps.map((app) => (
-                  <Card key={app.id} className="glass-effect hover:scale-105 transition-all duration-300 border-secondary/30">
+                  <Card key={app.id} className="bg-[#1A0B2E]/90 backdrop-blur-md hover:scale-105 transition-all duration-300 border-secondary/30 hover:border-secondary/50">
                     <CardHeader>
                       <div className="flex items-start justify-between mb-3">
                         <div className="text-5xl">{app.icon}</div>
@@ -274,22 +295,22 @@ const Index = () => {
                           </Badge>
                         </div>
                       </div>
-                      <CardTitle className="text-2xl">{app.name}</CardTitle>
-                      <CardDescription className="text-base">{app.description}</CardDescription>
+                      <CardTitle className="text-2xl text-white">{app.name}</CardTitle>
+                      <CardDescription className="text-base text-white/80">{app.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">{app.details}</p>
+                      <p className="text-sm text-white/70 mb-4">{app.details}</p>
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-1">
                           <Icon name="Star" size={16} className="text-yellow-400 fill-yellow-400" />
-                          <span className="font-medium">{app.rating}</span>
+                          <span className="font-medium text-white">{app.rating}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-muted-foreground">
+                        <div className="flex items-center gap-1 text-white/60">
                           <Icon name="Download" size={16} />
                           <span>{app.downloads}</span>
                         </div>
                       </div>
-                      <Badge variant="outline" className="mt-4 w-full justify-center py-2">
+                      <Badge variant="outline" className="mt-4 w-full justify-center py-2 border-white/20 text-white/80">
                         {app.type}
                       </Badge>
                     </CardContent>
